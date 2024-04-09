@@ -1,0 +1,18 @@
+PROJDIR=antdst-example
+
+
+# NOTE: this runs on ECAP HPC
+
+PATH_TO_CONTAINERS=/home/saturn/capn/mppi104h/singularity
+CONTAINER=$PATH_TO_CONTAINERS/antares_seatray_18-07-00_km3pipe_8.23.4_lp_2.1.2_bash.simg
+
+
+singularity exec \
+	    -e \
+	    --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst/:/mnt \
+		--bind /home/wecapstor3/capn/${USER}/ANTARES/mc/:/sps \
+	    --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
+	    --bind /home/saturn/capn/$USER:/home \
+	    ${CONTAINER}  \
+	    bash --noprofile --rcfile '/home/master_thesis/antares_dst/extract_dst/sh/init' -i
+	    

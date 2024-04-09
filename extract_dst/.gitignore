@@ -1,0 +1,6 @@
+events
+bin
+lists
+logs
+*.txt
+*.root

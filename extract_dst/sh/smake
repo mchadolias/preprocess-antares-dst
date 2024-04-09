@@ -1,0 +1,13 @@
+#!/bin/sh
+
+CONTAINER=/home/saturn/capn/mppi104h/singularity/antares_seatray_18-07-00_km3pipe_8.23.4_lp_2.1.2_bash.simg
+singularity exec \
+	    -e \
+	    --env TEST_INPUT_ENV=$1 \
+	    --env TEST_OUTPUT_ENV=$2 \
+	    --bind /home/saturn/capn/$USER:/home \
+	    --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst/:/mnt \
+	    --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
+	    $CONTAINER \
+	    bash --noprofile -c '/home/master_thesis/antares_dst/extract_dst/sh/make.sh'
+

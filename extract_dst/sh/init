@@ -1,0 +1,11 @@
+export ANTDSTROOT=/opt/i3ports/antdst/v1r5
+export ROOTSYS=/opt/i3ports/root-v5.34.25
+source $ROOTSYS/bin/thisroot.sh
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ANTDSTROOT/lib
+
+echo $ANTDSTROOT
+echo $ROOTSYS
+echo $LD_LIBRARY_PATH
+
+cd /home/master_thesis/antares_dst/extract_dst
+
