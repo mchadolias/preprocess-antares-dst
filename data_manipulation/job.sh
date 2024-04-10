@@ -4,8 +4,8 @@
 ### SLURM
 
 #SBATCH --ntasks=1                    # Run a single task (by default tasks == CPU)
-#SBATCH --mem=3G                      # GB
-#SBATCH --time=00-06:00:00               #
+#SBATCH --mem=1G                      # GB
+#SBATCH --time=00-00:10:00               #
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
