@@ -1,15 +1,30 @@
 #!/bin/sh
 ### usage:
-###       ./submit.sh <dry run flag> <path extension> <filelist>
+###       ./submit.sh <dry run flag> <output folder> <sub folder> <input list>
 ###
-###       e.g. ./submit.sh 1 mc list_anutau_b_NC_end_2.txt
+###       e.g. ./submit.sh 0 extracted split_files list_mupage_end_1_part00.txt
+###       e.g. ./submit.sh 0 extracted full_ending_runlist list_nue_a_NC_end_1.txt
 #
+
+echo "--------------------"
+echo "Starting script:" $(basename $BASH_SOURCE)
+echo "Parameters: \
+     - dry run flag: ${1}  \
+     - output folder: ${2} \
+     - submission folder: ${3} \
+     - input list: ${4}"
+
 ### set this to 1 for a DRY RUN, i.e. without submission to SLURM
 DRY_RUN=$1
-FOLDER=$2
-#
+
+### FOLDER where the antares extracted dst files are stored
+FOLDER=$2 # e.g. extracted
+
+### FOLDER for submission
+SUB_FOLDER=$3
+
 ### FILENAME of a list of files in subdir filelists
-THIS_INPUT_LIST=$3
+THIS_INPUT_LIST=$4
 
 echo "--------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
@@ -26,7 +41,7 @@ fi
 
 ### SET INPUT FILELIST
 PROJ_DIR_CONTAINER=/home/master_thesis/antares_dst/extract_dst
-INPUT_LIST_DIR=${PROJ_DIR_CONTAINER}/lists/mc/
+INPUT_LIST_DIR=${PROJ_DIR_CONTAINER}/lists/mc/${SUB_FOLDER}
 ## VARIABLE to pass into the container
 MY_INPUT_LIST=${INPUT_LIST_DIR}/${THIS_INPUT_LIST}
 
