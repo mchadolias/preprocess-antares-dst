@@ -6,10 +6,13 @@
 
 using namespace std;
 
+// Global variables
+TFile *file;
+
 // Open the tree
-TTree *OpenTree(string file, string input, string tree_name, string option)
+TTree *OpenTree(string input, string tree_name, string option)
 {
-    TFile *file = TFile::Open(input.c_str(), option.c_str());
+    file = TFile::Open(input.c_str(), option.c_str());
     if (!file || file->IsZombie())
     {
         std::cerr << "Error: file " << input << " not found" << std::endl;
@@ -38,7 +41,8 @@ int main(int argc, char *argv[])
     string input_file = argv[1];
     string output_file = argv[2];
 
-    TTree *input_tree = OpenTree(input_file, input_file, "sel", "READ");
+    // Open the tree
+    TTree *input_tree = OpenTree(input_file, "sel", "READ");
 
     double energy_true, cos_zenith_true;
     input_tree->SetBranchAddress("energy_true", &energy_true);
@@ -74,6 +78,7 @@ int main(int argc, char *argv[])
          << "Selected " << nsel << " events out of " << ntot << endl;
 
     // Write the tree
+    file->Close();
     output_tree->Write();
     output->Close();
 }
