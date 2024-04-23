@@ -10,7 +10,7 @@
 # OUTPUT_FILE: Output file with the dataset without duplicated events
 
 
-cd ${WORK}/master_thesis/antares_dst/cleaning_dataset
+cd ${WORK}/master_thesis/antares_dst/data_manipulation
 
 INPUT_FILE=$1
 INPUT_TREE=$2
