@@ -17,7 +17,7 @@ echo  "Directory: ${DIR}"
 echo  "Output file: ${OUTFILE}"
 
 
-find ${DIR} -maxdepth 1 -type f ! -size 0c -name "*.root" -printf '%f\n' > ${OUTFILE}
+find ${DIR} -maxdepth 1 -type f ! -size 0c -name "*.txt" -printf '%f\n' > ${OUTFILE}
 
 declare -a pattern_array=("numu_${1}_CC" "numu_${1}_NC" "anumu_${1}_CC" "anumu_${1}_NC" \
                           "nutau_${1}_CCmu" "nutau_${1}_CCshow"  "nutau_${1}_NC" \
@@ -25,19 +25,11 @@ declare -a pattern_array=("numu_${1}_CC" "numu_${1}_NC" "anumu_${1}_CC" "anumu_$
                           "nue_${1}_CC" "nue_${1}_NC" "anue_${1}_CC" "anue_${1}_NC" "mupage")
 
 
-# split the list
-for i in $(seq 0 9);
-do
-     grep -E "[0-9]{5}${i}" ${OUTFILE} > end_${i}.txt
-    
-     for pat in "${pattern_array[@]}"
-     do
-	     grep $pat end_${i}.txt > mc_${pat}_end_${i}.txt
-     done
+# split the list    
+ for pat in "${pattern_array[@]}"
+ do
+     grep $pat ${OUTFILE} > list_${pat}_end_all_runs.txt
+ done
 
-done
-
-rm -rfv end_{0..9}.txt
-find . -size 0c -exec rm -if {} \;
 
 printf "\n======== Script complete ======== \n\n"
