@@ -19,10 +19,10 @@ echo  "Output file: ${OUTFILE}"
 
 find ${DIR} -maxdepth 1 -type f ! -size 0c -name "*.root" -printf '%f\n' > ${OUTFILE}
 
-declare -a pattern_array=("numu_${1}_CC" "numu_${1}_NC" "anumu_${1}_CC" "anumu_${1}_NC" \
-                          "nutau_${1}_CCmu" "nutau_${1}_CCshow"  "nutau_${1}_NC" \
-				      "anutau_${1}_CCmu" "anutau_${1}_CCshow" "anutau_${1}_NC" \
-                          "nue_${1}_CC" "nue_${1}_NC" "anue_${1}_CC" "anue_${1}_NC" "mupage")
+declare -a pattern_array=("_numu_${1}_CC" "_numu_${1}_NC" "_anumu_${1}_CC" "_anumu_${1}_NC" \
+                          "_nutau_${1}_CCmu" "_nutau_${1}_CCshow"  "_nutau_${1}_NC" \
+				      "_anutau_${1}_CCmu" "_anutau_${1}_CCshow" "_anutau_${1}_NC" \
+                          "_nue_${1}_CC" "_nue_${1}_NC" "_anue_${1}_CC" "_anue_${1}_NC" "_mupage")
 
 
 # split the list
@@ -32,7 +32,7 @@ do
     
      for pat in "${pattern_array[@]}"
      do
-	     grep $pat end_${i}.txt > mc_${pat}_end_${i}.txt
+	     grep $pat end_${i}.txt > mc${pat}_end_${i}.txt
      done
 
 done
