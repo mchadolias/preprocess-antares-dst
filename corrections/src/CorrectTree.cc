@@ -10,31 +10,49 @@ using namespace std;
 
 // Define each function
 void OpenFile(TFile *&file, string input_file);
-void RemoveDuplicateEvents(TFile *file, string input_tree, string output_file);
+void RemoveDuplicateEvents(TFile *file, string tree, TFile *output_file);
+int LivetimeDataTotalDays(int Year);
+void WeightCorrection(string input_filename, string tree_name, string new_file);
 
 int main(int argc, char *argv[])
 {
 
     // Check the number of parameters
-    if (argc != 4)
+    if (argc != 5)
     {
         cerr << "Usage: " << argv[0] << " <input_file> <output_file>" << endl;
     }
 
     // Define the input parameters
-    string input_file = argv[1];
-    string input_tree = argv[2];
-    string output_file = argv[3];
+    string input_name = argv[1];
+    string tree = argv[2];
+    string output_name = argv[3];
+    bool is_weighted = stoi(argv[4]);
+
+    
+    cout << "is_weighted: " << is_weighted << endl; // "0" or "1
+
+    cout << "\n============= Start of the program =============" << endl;
+    cout << "Input file: " << input_name << endl;
+    cout << "Tree: " << tree << endl;
+    cout << "Output file: " << output_name << endl;         
 
     // Open the input file
     TFile *file;
-    OpenFile(file, input_file);
+    OpenFile(file, input_name);
+
+    // Create the output file
+    TFile *output_file = TFile::Open(output_name.c_str(), "RECREATE");
 
     // Remove the duplicate events
-    RemoveDuplicateEvents(file, input_tree, output_file);
-
-    // Close the input file
-    file->Close();
+    RemoveDuplicateEvents(file, tree, output_file);
+    
+    if (!is_weighted)
+    {
+        string weighted_filename =  output_name.substr(0, output_name.find_last_of(".")) + "_weighted.root";
+        // Apply the weight correction
+        WeightCorrection(output_name, tree, weighted_filename);
+    }
 
     cout << "\n============= End of the program =============" << endl;
 }
@@ -49,21 +67,122 @@ void OpenFile(TFile *&file, string filename)
     }
 }
 
-void RemoveDuplicateEvents(TFile *file, string tree, string output_file)
+void WeightCorrection(string input_filename, string tree_name, string new_file)
 {
+    // Open the ROOT file
+    TFile *input_file = TFile::Open(input_filename.c_str(), "READ");
+    TTree *input_tree = (TTree *)input_file->Get(tree_name.c_str());
+
+    // Create new ROOT file
+    TFile *output_file = TFile::Open(new_file.c_str(), "RECREATE");
+
+    // Open the input tree
+    TTree *tree = input_tree->CloneTree(0);
+    if (!tree)
+    {
+        cerr << "Error: tree " << tree << " not found" << endl;
+        exit(1);
+    }
+
+    // Define the variables of each branch
+    double w2, w3, w_honda, w_non_osc, weight_one_year, ngen, run_duration;
+    float w_muon, DataMCRatio; // DataMCRatio is the ratio of data to MC events
+    int year, date, run_id;
+
+    // Set the branches for the modified tree
+    input_tree->SetBranchAddress("w2", &w2);
+    input_tree->SetBranchAddress("w3", &w3);
+    input_tree->SetBranchAddress("w_honda", &w_honda);
+    input_tree->SetBranchAddress("w_muon", &w_muon);
+    input_tree->SetBranchAddress("ngen", &ngen);
+    input_tree->SetBranchAddress("RunDurationYear", &run_duration);
+    input_tree->SetBranchAddress("Date", &date);
+    input_tree->SetBranchAddress("DataMCRatio", &DataMCRatio);
+    input_tree->SetBranchAddress("run_id", &run_id);
+    tree->Branch("Year", &year, "Year/I");
+    tree->Branch("w_non_osc", &w_non_osc, "w_non_osc/D");
+    tree->Branch("weight_one_year", &weight_one_year, "weight_one_year/D");
+
+    // Define the number of events
+    Int_t ntot = (Int_t)input_tree->GetEntries();
+
+    cout << "\nRunning the weight correction for " << ntot << " events" << endl; 
+    // Loop over the events
+    for (Int_t i; i < ntot; i++)
+    {
+        // Get the entry
+        input_tree->GetEntry(i);
+
+        // Get the year from the date
+        year = date / 10000;
+
+        // Correction for runs <30412
+        if (run_id < 30412){w2 *= 0.8 ; w3 *= 0.8 ; w_honda *= 0.8 ; w_muon *= 0.8;}
+
+        // Apply Data/MC ratio
+        w2 *= DataMCRatio;
+        w3 *= DataMCRatio;
+        w_honda *= DataMCRatio;
+        w_muon *= DataMCRatio;
+
+        // Calculate the weight correction
+        w_non_osc = w3/ngen * run_duration;
+        weight_one_year = w_muon * 365.25 / LivetimeDataTotalDays(year);
+
+        // Fill the output tree
+        tree->Fill();
+
+        // Print the progress every 5% of the events
+        if (i % (ntot / 20) == 0)
+        {
+            cout << "Processed " << i << " events out of " << ntot << endl;
+        }
+    }
+
+    // Write the output tree
+    input_file->Close();
+    tree->Write();
+    output_file->Close();
+}
+
+int LivetimeDataTotalDays(int year)
+{
+    // Set the number of days of data taking in ANTARES
+
+    if(year == 2007) return 205.552;
+    else if(year == 2008) return 213.276;
+    else if(year == 2009) return 228.674;
+    else if(year == 2010) return 241.034;
+    else if(year == 2011) return 281.724;
+    else if(year == 2012) return 250.137;
+    else if(year == 2013) return 281.724;
+    else if(year == 2014) return 338.085;
+    else if(year == 2015) return 352.942;
+    else if(year == 2016) return 356.574;
+    else if(year == 2017) return 355.512;
+    else if(year == 2018) return 339.637;
+    else if(year == 2019) return 351.093;
+    else if(year == 2020) return 355.093;
+    else if(year == 2021) return 350.116;
+    else if(year == 2022) return 40.824;
+    else {
+        cout << "Year not found" << endl;
+        return 0;
+    }
+}
+
+void RemoveDuplicateEvents(TFile *file, string tree, TFile *output_file)
+{
+    cout << "\nRunning the duplicate event removal" << endl;
+    cout << "Input file: " << file->GetName() << endl;
+    cout << "Output file: " << output_file->GetName() << endl;
+    cout << "Tree: " << tree << endl;
+
     // Open the input tree
     TTree *input_tree = (TTree *)file->Get(tree.c_str());
     if (!input_tree)
     {
-        cerr << "Error: tree " << input_tree << " not found" << endl;
-        exit(1);
-    }
-
-    // Create the output file
-    TFile *output = TFile::Open(output_file.c_str(), "RECREATE");
-    if (!output || output->IsZombie())
-    {
-        cerr << "Error: file " << output_file << " not found" << endl;
+        cerr << "Error: tree " << tree << " not found" << endl;
         exit(1);
     }
 
@@ -194,6 +313,7 @@ void RemoveDuplicateEvents(TFile *file, string tree, string output_file)
     // Define the number of events
     Int_t ntot = (Int_t)input_tree->GetEntries();
 
+    cout << "\nRunning the duplicate event removal for " << ntot << " events" << endl;
     // Loop over the events
     for (Int_t i; i < ntot; i++)
     {
@@ -333,5 +453,6 @@ void RemoveDuplicateEvents(TFile *file, string tree, string output_file)
 
     // Write the output tree
     output_tree->Write();
-    output->Close();
+    output_file->Close();
+    file -> Close();
 }

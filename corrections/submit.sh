@@ -7,19 +7,20 @@
 ### set this to 1 for a DRY RUN, i.e. without submission to SLURM
 DRY_RUN=$1
 THIS_INPUT_LIST=$2
+SUB_FOLDER=$3
 
 echo -e "\n--------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
 
 ### PROJECT DIR for logs and the worker script
 if [ -z "$THIS_INPUT_PROJ_DIR" ]; then
-    THIS_PROJ_DIR=/home/saturn/capn/$USER/master_thesis/antares_dst/data_manipulation
+    THIS_PROJ_DIR=/home/saturn/capn/$USER/master_thesis/antares_dst/corrections
 else
     THIS_PROJ_DIR=$THIS_INPUT_PROJ_DIR
 fi
 
 ### SET INPUT FILELIST
-INPUT_LIST_DIR=${THIS_PROJ_DIR}/lists
+INPUT_LIST_DIR=${THIS_PROJ_DIR}/lists/${SUB_FOLDER}
 MY_INPUT_LIST=${INPUT_LIST_DIR}/${THIS_INPUT_LIST}
 
 ### JOBNAME
@@ -46,7 +47,7 @@ INPUT_LIST=$MY_INPUT_LIST \
 sbatch \
 --job-name=${JOBNAME} \
 --output=logs/conv_${JOBNAME}_%j.log \
---mail-user=michael.chadolias@fau.de \
+--mail-user=mchadolias@km3net.de \
 --export=ALL,\
 INPUT_LIST=$MY_INPUT_LIST, \
          ${WORKER_SCRIPT}

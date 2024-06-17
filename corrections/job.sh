@@ -4,13 +4,15 @@
 ### SLURM
 
 #SBATCH --ntasks=1                    # Run a single task (by default tasks == CPU)
-#SBATCH --mem=1G                      # GB
-#SBATCH --time=00-02:30:00               #
+#SBATCH --mem=3G                      # GB
+#SBATCH --time=00-04:30:00               #
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
-cd /home/saturn/capn/mppi133h/master_thesis/antares_dst/data_manipulation
+cd $WORK/master_thesis/antares_dst/corrections
 DIRFILES=/home/wecapstor3/capn/mppi133h/ANTARES/mc
+TREE_NAME="sel"
+IS_WEIGHTED=0
 
 echo "-----------------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
@@ -27,8 +29,8 @@ echo ${myarr[@]}
 for rootfiles in ${myarr[@]};
 	 do
 	 	echo -e "\nStarting analyze script with input file: ${rootfiles}"
-	    INFILE=${DIRFILES}/extracted/${rootfiles}
-		OUTFILES=${DIRFILES}/extracted_cor/${rootfiles%.root}_cor.root
+	    INFILE=${DIRFILES}/merged/extracted/${rootfiles}
+		OUTFILES=${DIRFILES}/merged/corrected/${rootfiles%.root}_cor.root
 		echo -e "Output file: ${OUTFILES} \n"
-		/home/saturn/capn/mppi133h/master_thesis/antares_dst/data_manipulation/bin/RemoveDuplicateEvents ${INFILE} "sel" ${OUTFILES} 
+		/home/saturn/capn/mppi133h/master_thesis/antares_dst/corrections/bin/CorrectTree ${INFILE} ${TREE_NAME} ${OUTFILES} ${IS_WEIGHTED}
 done
