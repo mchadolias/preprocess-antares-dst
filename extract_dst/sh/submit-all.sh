@@ -3,8 +3,8 @@
 ### usage:
 ###      ./submit-all.sh <dry run flag> <output folder> <sub folder> 
 ###
-###       e.g. ./submit-all.sh 0 split_files extracted for muons specify also the names of the files *mupage*
-###       e.g. ./submit-all.sh 0 full_ending_runlist extracted for neutrinos specify also the names of the files *nu*
+###       e.g. ./submit-all.sh 0 extracted split_files for muons specify also the names of the files *mupage*
+###       e.g. ./submit-all.sh 0 extracted full_ending_runlist for neutrinos specify also the names of the files *nu*
 
 echo "--------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
@@ -27,7 +27,7 @@ SUB_FOLDER=${3}
 ### - neutrinos saved on full_ending_runlist 
 ### - muons saved on split_files
 
-FILEDIR=/home/saturn/capn/mppi133h/master_thesis/antares_dst/extract_dst/lists/mc/${SUB_FOLDER}
+FILEDIR=$WORK/master_thesis/antares_dst/extract_dst/lists/mc/${SUB_FOLDER}
 
 echo "-------------------------"
 echo "Starting script: $(basename $BASH_SOURCE)"
