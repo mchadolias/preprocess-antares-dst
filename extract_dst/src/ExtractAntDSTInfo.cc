@@ -416,7 +416,7 @@ Float_t correctForLivetimeRatio( double type, double interaction_type, double ru
   return DataMCRatio;
   }
 
-const double sec_to_year = 1./(3.6*1.e6*24*365.25);
+const double sec_to_year = 1./(3.6*1.e3*24*365.25);
 
 // ##############################################################
 int main(int argc, char **argv)
@@ -460,7 +460,7 @@ int main(int argc, char **argv)
   unsigned long long event_id = 0, trigg_counter = 0;
 
   // data quality parameters
-  double baseline_rate = 0, burst_fraction = 0, RunDurationYear = 0, runDurationSeconds = 0, run_quality = 0, frame = 0;
+  double baseline_rate = 0, burst_fraction = 0, RunDurationYear = 0, runDurationSeconds = 0, runDuration = 0, run_quality = 0, frame = 0;
   double detcenter_x = 0., detcenter_y = 0., detcenter_z = 0.; // detector center
 
   // true parameters
@@ -469,8 +469,8 @@ int main(int argc, char **argv)
   
   int run_id = 0, type = 0, interaction_type = 0, Date = 0, scan;
   double E_min_gen = -1, E_max_gen = -1;
-  Float_t weight_muon, ratio_active, DataMCRatio; // weight for muons
-  double energy_true = 0, weight_w2 = 0, weight_w3 = 0, weight_honda = 0, ngen = 0, pos_x_true = 0, pos_y_true = 0, pos_z_true = 0, bjorken_y_true = 0, cos_zenith_true = 0, azimuthdeg_true = 0;
+  Float_t w_muon, ratio_active, DataMCRatio; // weight for muons
+  double energy_true = 0, w2= 0, w3= 0, w_honda= 0, ngen = 0, pos_x_true = 0, pos_y_true = 0, pos_z_true = 0, bjorken_y_true = 0, cos_zenith_true = 0, azimuthdeg_true = 0;
 
   // reconstruction parameters
   double aafit_lambda = -20., aafit_bjy = 0, aafit_pos_x = 0, aafit_pos_y = 0, aafit_pos_z = 0, angerrordeg_aafit = 0, zenithdeg_aafit = 0, cos_zenith_aafit = 0, azimuthdeg_aafit = 0, nusedlines_aafit = 0, nusedhits_aafit = 0., energy_aafit_ANN_ECAP = 0, energy_aafit_dEdX_CEA = 0, aafit_totalamp = 0, aafit_zmin = 0, aafit_zmax = 0, aafit_tracklength = 0., aafit_nhits = 0.;
@@ -521,27 +521,29 @@ int main(int argc, char **argv)
   // General Info branches
   outTree->Branch("MJD", &MJD);
   outTree->Branch("Date", &Date);
-  outTree->Branch("Run", &run);
-  outTree->Branch("EventID", &event_id);
-  outTree->Branch("TriggCounter", &trigg_counter);
-  outTree->Branch("Frame", &frame);
+  outTree->Branch("run", &run);
+  outTree->Branch("event_id", &event_id);
+  outTree->Branch("event_counter_trigger", &trigg_counter);
+  outTree->Branch("frame_index", &frame);
   outTree->Branch("BaselineRate", &baseline_rate);
   outTree->Branch("RatioActive", &ratio_active);
   outTree->Branch("BurstFraction", &burst_fraction);
+  outTree->Branch("run_duration", &runDurationSeconds);
+  outTree->Branch("run_duration_dq", &runDuration);
   outTree->Branch("RunDurationYear", &RunDurationYear);
   outTree->Branch("RunQuality", &run_quality);
   outTree->Branch("Scan", &scan);
 
   // Selected events true values branches
-  outTree->Branch("RunID", &run_id);
-  outTree->Branch("Type", &type);
+  outTree->Branch("run_id", &run_id);
+  outTree->Branch("type", &type);
   outTree->Branch("is_neutrino", &is_neutrino);
   outTree->Branch("is_cc", &is_cc);
   outTree->Branch("interaction_type", &interaction_type);
-  outTree->Branch("weight_w2", &weight_w2);
-  outTree->Branch("weight_w3", &weight_w3);
-  outTree->Branch("weight_muon", &weight_muon);
-  outTree->Branch("weight_honda", &weight_honda);
+  outTree->Branch("w2", &w2);
+  outTree->Branch("w3", &w3);
+  outTree->Branch("w_muon", &w_muon);
+  outTree->Branch("w_honda", &w_honda);
   outTree->Branch("ngen", &ngen);
   outTree->Branch("DataMCRatio", &DataMCRatio);
   outTree->Branch("pos_x_true", &pos_x_true);
@@ -695,9 +697,9 @@ int main(int argc, char **argv)
         cout << "\nThere is data quality for run "<<currentRun<<"!"<<endl;
 	      
 	      dataFile->GetDataQuality((uint) currentRun, currentDataQuality);
-	      runDurationSeconds = currentDataQuality.GetRunDuration();
-	      runDurationSeconds = (currentDataQuality.GetFrameTime() * currentDataQuality.GetNSlices());
-	      RunDurationYear = runDurationSeconds*sec_to_year;
+	      runDuration = currentDataQuality.GetRunDuration();
+	      runDurationSeconds = (currentDataQuality.GetFrameTime() * currentDataQuality.GetNSlices() / 1e3);
+        RunDurationYear = runDurationSeconds * sec_to_year;
 	      
         baseline_rate = currentDataQuality.GetBaseline();
         burst_fraction = currentDataQuality.GetBurstFraction();
@@ -743,32 +745,16 @@ int main(int argc, char **argv)
         type = MCevt.GetPrimaryParticle().GetParticleType();
         energy_true = MCevt.GetPrimaryParticle().GetEnergy(); // GeV
 
-        if (isMupage) weight_muon = muon_weight(run_id, m);
-        else weight_muon = 0;
+        if (isMupage) w_muon = muon_weight(run_id, m);
+        else w_muon = 0;
 
-        weight_w2 = MCevt.GetWeight_W2();
-        weight_w3 = MCevt.GetWeight_W3();
-        weight_honda = MCevt.GetWeight_Honda();
+        w2= MCevt.GetWeight_W2();
+        w3= MCevt.GetWeight_W3();
+        w_honda= MCevt.GetWeight_Honda();
         ngen = MCevt.GetNGenEvents();
 
-        // Account for missing data before run < 30412
-        if (run_id < 30412) {weight_w2 *= 0.8; weight_w3 *= 0.8; weight_honda *= 0.8; weight_muon *= 0.8;}
-
-        // Apply energy correction for each run
+        // Data/MC ratio correction
         DataMCRatio = correctForLivetimeRatio(type, interaction_type, run_id);
-        weight_w2 *= DataMCRatio;
-        weight_w3 *= DataMCRatio;
-        weight_honda *= DataMCRatio;
-        weight_muon *= DataMCRatio;
-
-        // Normalize weights to year and number of generated events
-        weight_w2 /= ngen;
-        weight_w3 /= ngen;
-        weight_honda /= ngen;
-
-        weight_w2 *= RunDurationYear;
-        weight_w3 *= RunDurationYear;
-        weight_honda *= RunDurationYear;
 
         if (type == -13) is_neutrino = false;
 
