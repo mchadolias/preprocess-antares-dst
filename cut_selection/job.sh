@@ -27,8 +27,8 @@ echo ${myarr[@]}
 for rootfiles in ${myarr[@]};
 	 do
 	 	echo -e "\nStarting analyze script with input file: ${rootfiles}"
-	    INFILE=${DIRFILES}/extracted_cor/${rootfiles}
-		OUTFILES=${DIRFILES}/extracted_merged/low_energy/${rootfiles%.root}_sample.root
+	    INFILE=${DIRFILES}/merged/final/${rootfiles}
+		OUTFILES=${DIRFILES}/cut_selection/100GeV/${rootfiles%.root}_low.root
 		echo -e "Output file: ${OUTFILES} \n"
 		/home/saturn/capn/mppi133h/master_thesis/antares_dst/cut_selection/bin/CutTrueSample ${INFILE} ${OUTFILES} 
 done
