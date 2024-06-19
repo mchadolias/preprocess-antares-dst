@@ -62,14 +62,14 @@ int main(int argc, char *argv[])
         input_tree->GetEntry(i);
 
         // Apply the cuts
-        if (energy_true < 1e2 && energy_true > 1e1 && cos_zenith_true < 0)
+        if (energy_true < 1e2 && energy_true > 1e1)
         {
             nsel++;
             output_tree->Fill();
         }
 
         // Print the progress
-        if (i % (ntot / 20) == 0)
+        if (i % (ntot / 50) == 0)
             cout << "Processed " << i << " events out of " << ntot << endl;
     }
 
