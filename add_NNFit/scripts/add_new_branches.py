@@ -46,7 +46,7 @@ def define_file_path(task):
     if task == "cut_selection":
         return "cut_selection/100GeV"
     elif task == "merged":
-        return "merged/merged_before_nnfit"
+        return "merged/final"
     else:
         raise ValueError("The task is not defined or wrong value has been given. Please choose between cut_selection and merged. Check the argument_parser function.")
     
