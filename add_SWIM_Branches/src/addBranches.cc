@@ -35,10 +35,9 @@ void addBranches(string old_root_file, string new_root_file)
     }
 
     // Define variables
-    Float_t nnfit_shower_cos_zenith, nnfit_track_cos_zenith, nnfit_shower_theta, nnfit_track_theta;
-    Double_t energy_true, cos_zenith_true, energy_recoTrue, cos_zenith_recoTrue, bjorken_y_recoTrue;
-
-    Float_t nnfit_shower_logE, nnfit_track_logE, nnfit_shower_energy, nnfit_track_energy;
+    Float_t nnfit_shower_theta, nnfit_track_theta, nnfit_shower_logE, nnfit_track_logE;
+    Double_t energy_true, cos_zenith_true, energy_recoTrue, cos_zenith_recoTrue, bjorken_y_recoTrue;20
+    Double_t nnfit_shower_cos_zenith, nnfit_track_cos_zenith, nnfit_shower_energy, nnfit_track_energy, nnfit_bjorken_y;
 
     // Create a new branch
     cout << "Creating new branch" << endl;
@@ -54,10 +53,11 @@ void addBranches(string old_root_file, string new_root_file)
     TFile *newfile = new TFile(new_root_file.c_str(), "RECREATE");
     TTree *newtree = oldtree->CloneTree(0);
 
-    newtree->Branch("NNFitShower_Energy", &nnfit_shower_energy, "NNFitShower_Energy/F");
-    newtree->Branch("NNFitTrack_Energy", &nnfit_track_energy, "NNFitTrack_Energy/F");
-    newtree->Branch("NNFitShower_cos_zenith", &nnfit_shower_cos_zenith, "NNFitShower_CosZenith/F");
-    newtree->Branch("NNFitTrack_cos_zenith", &nnfit_track_cos_zenith, "NNFitTrack_CosZenith/F");
+    newtree->Branch("NNFitShower_Energy", &nnfit_shower_energy, "NNFitShower_Energy/D");
+    newtree->Branch("NNFitTrack_Energy", &nnfit_track_energy, "NNFitTrack_Energy/D");
+    newtree->Branch("NNFitShower_cos_zenith", &nnfit_shower_cos_zenith, "NNFitShower_CosZenith/D");
+    newtree->Branch("NNFitTrack_cos_zenith", &nnfit_track_cos_zenith, "NNFitTrack_CosZenith/D");
+    newtree->Branch("NNFit_Bjorken_y", &nnfit_bjorken_y, "NNFit_Bjorken_y/D");
     newtree->Branch("energy_recoTrue", &energy_recoTrue, "energy_recoTrue/D");
     newtree->Branch("cos_zenith_recoTrue", &cos_zenith_recoTrue, "cos_zenith_recoTrue/D");
     newtree->Branch("bjorken_y_recoTrue", &bjorken_y_recoTrue, "bjorken_y_recoTrue/D");
@@ -76,6 +76,7 @@ void addBranches(string old_root_file, string new_root_file)
         energy_recoTrue = energy_true;
         cos_zenith_recoTrue = cos_zenith_true;
         bjorken_y_recoTrue = 0.5;
+        nnfit_bjorken_y = 0.5;
         nnfit_shower_energy = pow(10, nnfit_shower_logE);
         nnfit_track_energy = pow(10, nnfit_track_logE);
         nnfit_shower_cos_zenith = - cos(nnfit_shower_theta * pi / 180);
