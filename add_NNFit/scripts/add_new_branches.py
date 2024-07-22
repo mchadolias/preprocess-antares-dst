@@ -15,6 +15,7 @@ def argument_parser():
     parser.add_argument("--task", type=str, dest="task", help="The task to perform. The available options are cut_selection and merged.", default="cut_selection")
     parser.add_argument("--c", type=str, dest="cluster", help="The cluster to run the code. The available options are woody and lyon.", default="woody")
     parser.add_argument("--t", type=bool, dest="test", help="Run the test function.", default=False)
+    parser.add_argument("--particle", type=str, dest="particle", help="The particle type for the rootfile. The available options are neutrinos and muons.", default="neutrinos")
     
     return parser.parse_args()
 
@@ -42,14 +43,24 @@ def run_test_lyon():
     
     return input_root_file, input_h5_file, path 
 
-def define_file_path(task):
-    if task == "cut_selection":
-        return "cut_selection/100GeV"
-    elif task == "merged":
-        return "merged/final"
+def define_file_path(task, particle="neutrinos"):
+    if particle == "neutrinos":
+        if task == "cut_selection":
+            return "cut_selection/100GeV"
+        elif task == "merged":
+            return "merged/final"
+        else:
+            raise ValueError("The task is not defined or wrong value has been given. Please choose between cut_selection and merged. Check the argument_parser function.")
+    elif particle == "muons":
+        if task == "cut_selection":
+            return "cut_selection/nnfit_cut"
+        elif task == "merged":
+            return "merged/weighted"
+        else:
+            raise ValueError("The task is not defined or wrong value has been given. Please choose between cut_selection and merged. Check the argument_parser function.")
     else:
-        raise ValueError("The task is not defined or wrong value has been given. Please choose between cut_selection and merged. Check the argument_parser function.")
-    
+        raise ValueError("The particle type is not defined or wrong value has been given. Please choose between neutrinos and muons. Check the argument_parser function.")
+
 def modify_dataframe(df, is_merged_file = False):
     # Drop "File" column -> Note: The column is only present in merged h5 files
     if is_merged_file:
@@ -57,8 +68,8 @@ def modify_dataframe(df, is_merged_file = False):
         print("The column 'File' has been dropped.")
     
     # Insert one column "bjorken_y" for NNFit reco files in the end
-    df.insert(loc=df.shape[1], column="NNFit_bjorken_y", value=0.5)
-    print("The column 'nnfit_bjorken_y' has been inserted.\n")
+    #df.insert(loc=df.shape[1], column="NNFit_bjorken_y", value=0.5)
+    #print("The column 'nnfit_bjorken_y' has been inserted.\n")
 
 if __name__ == "__main__":
     # Load the data
@@ -78,6 +89,7 @@ if __name__ == "__main__":
     is_test = args.test
     cluster = args.cluster
     task = args.task
+    particle = args.particle
     
     if is_test:
         if cluster == "woody":
@@ -88,7 +100,7 @@ if __name__ == "__main__":
         nnfit_path = rootfile_path = path        
     else:
         nnfit_path = os.path.join(path, "nnfit_reco", input_h5_file)
-        rootfile_path = os.path.join(path, define_file_path(task))    
+        rootfile_path = os.path.join(path, define_file_path(task, particle))
     
     # Load the dataframes
     print("ROOT FILE: ", input_root_file)
@@ -106,12 +118,13 @@ if __name__ == "__main__":
     # Load the rootfile
     print("\nLoading the rootfile...")
     df_antdst = fm.load_large_rootfile_to_df(os.path.join(rootfile_path, input_root_file))
-    
+
     print("\nExporting the antdst dataframe to a hdf5 file...")
     if is_test:
         fm.save_to_hdf5(df_antdst, f"{input_root_file.split('.')[0]}.hdf5", path = os.path.join(path, "output"))
-    else:    
-        fm.save_to_hdf5(df_antdst, f"{input_root_file.split('.')[0]}.hdf5", path = rootfile_path)
+    else:
+        if particle == "neutrinos": 
+            fm.save_to_hdf5(df_antdst, f"{input_root_file.split('.')[0]}.hdf5", path = rootfile_path)
     
     # Rename the columns
     print("\nRenaming the columns...")
@@ -136,8 +149,9 @@ if __name__ == "__main__":
         fm.save_to_hdf5(df_merged, f"{input_root_file.split('.')[0]}_updated.hdf5", path = os.path.join(path, "output"))
         fm.export_dataframe_to_rootfile(df_merged, f"{input_root_file.split('.')[0]}_updated.root", path = os.path.join(path, "output"))
     else:
+        if particle == "neutrinos":
+            fm.save_to_hdf5(df_merged, f"{input_root_file.split('.')[0]}_updated.hdf5", path = rootfile_path)
         fm.export_dataframe_to_rootfile(df_merged, f"{input_root_file.split('.')[0]}_updated.root", path = rootfile_path)
-        fm.save_to_hdf5(df_merged, f"{input_root_file.split('.')[0]}_updated.hdf5", path = rootfile_path)
         
     print("\n============== END OF THE PROGRAM ==============\n")
     

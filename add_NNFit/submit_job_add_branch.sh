@@ -1,14 +1,20 @@
 #!/bin/sh
 ### usage:
-###       ./submit.sh <DRY_RUN_FLAG> <ROOT_FILE> <H5_FILE> 
+###       ./submit.sh <DRY_RUN_FLAG> <ROOT_FILE> <H5_FILE> <TASK> <PARTICLE>
 ###
 ###      
+###     DRY_RUN_FLAG: 0 for submission to SLURM, 1 for frontend execution and 2 for test run
+###     ROOT_FILE: the root file to be processed
+###     H5_FILE: the h5 file to be processed
+###     TASK: the task to be executed 
+###     PARTICLE: the particle type to be processed (muons or neutrinos)
 #
 ### set this to 1 for a DRY RUN, i.e. without submission to SLURM
 DRY_RUN=$1
 ROOT_FILE=$2
 H5_FILE=$3
 TASK=$4
+PARTICLE=$5
 
 echo -e "\n--------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
@@ -29,7 +35,14 @@ if [ ! -d ${THIS_PROJ_DIR}/logs ]; then
     mkdir ${THIS_PROJ_DIR}/logs
 fi
 
-WORKER_SCRIPT=${THIS_PROJ_DIR}/job_add_branch_flavour.sh
+if [ ${PARTICLE} == "muons" ]; then
+    WORKER_SCRIPT=${THIS_PROJ_DIR}/job_add_branch_muons.sh
+elif [ ${PARTICLE} == "neutrinos" ]; then
+    WORKER_SCRIPT=${THIS_PROJ_DIR}/job_add_branch_flavour.sh
+else
+    echo "PARTICLE type not recognized"
+    exit
+fi
 
 
 if [[ "$DRY_RUN" -eq 0 ]]; then
@@ -65,6 +78,7 @@ else
             WORKER_SCRIPT:${WORKER_SCRIPT} \n \
             ROOT_FILE:${ROOT_FILE} \n \
             H5_FILE:${H5_FILE} \n \
-            TASK:${TASK}"
+            TASK:${TASK} \n \
+            PARTICLE:${PARTICLE}"
 
 fi
