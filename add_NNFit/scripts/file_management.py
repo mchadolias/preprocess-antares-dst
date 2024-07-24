@@ -135,6 +135,8 @@ def list_files_with_pattern(directory, pattern):
         list: A list of files that match the pattern in the directory.
     """
     files = glob.glob(directory + '/' + pattern)
+    print(f"Number of files found: {len(files)}")
+    print(files)
     return files
 
 def save_to_hdf5(df, filename, path = '/sps/km3net/users/mchadoli/ANTARES/nnfit_reco/'):
