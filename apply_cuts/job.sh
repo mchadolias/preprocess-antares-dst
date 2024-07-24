@@ -9,7 +9,7 @@
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
-cd /home/saturn/capn/mppi133h/master_thesis/antares_dst/cut_selection
+cd /home/saturn/capn/mppi133h/master_thesis/antares_dst/apply_cuts
 DIRFILES=/home/wecapstor3/capn/mppi133h/ANTARES/mc
 
 echo "-----------------------------"
@@ -30,5 +30,5 @@ for rootfiles in ${myarr[@]};
 	    INFILE=${DIRFILES}/merged/final/${rootfiles}
 		OUTFILES=${DIRFILES}/cut_selection/100GeV/${rootfiles%.root}_low.root
 		echo -e "Output file: ${OUTFILES} \n"
-		/home/saturn/capn/mppi133h/master_thesis/antares_dst/cut_selection/bin/CutTrueSample ${INFILE} ${OUTFILES} 
+		/home/saturn/capn/mppi133h/master_thesis/antares_dst/apply_cuts/bin/CutTrueSample ${INFILE} ${OUTFILES} 
 done
