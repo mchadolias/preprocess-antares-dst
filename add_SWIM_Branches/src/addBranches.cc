@@ -36,7 +36,7 @@ void addBranches(string old_root_file, string new_root_file)
 
     // Define variables
     Float_t nnfit_shower_theta, nnfit_track_theta, nnfit_shower_logE, nnfit_track_logE;
-    Double_t energy_true, cos_zenith_true, energy_recoTrue, cos_zenith_recoTrue, bjorken_y_recoTrue;20
+    Double_t energy_true, cos_zenith_true, energy_recoTrue, cos_zenith_recoTrue, bjorken_y_recoTrue;
     Double_t nnfit_shower_cos_zenith, nnfit_track_cos_zenith, nnfit_shower_energy, nnfit_track_energy, nnfit_bjorken_y;
 
     // Create a new branch
