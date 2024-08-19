@@ -1,8 +1,8 @@
 #!/bin/sh
 ### usage:
-###       ./submit.sh <dry run flag> <file_dir> <filelist> <dir_outfile> <cut_selection>
+###       ./submit.sh <dry run flag> <file_dir> 
 ###
-###       e.g. ./submit.sh 1 list_anutau_b_NC_end_2.txt swim/cut_a cut_a
+###       e.g. ./submit.sh 1 list_anutau_b_NC_end_2.txt
 #
 ### set this to 1 for a DRY RUN, i.e. without submission to SLURM
 DRY_RUN=$1
