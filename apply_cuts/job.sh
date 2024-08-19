@@ -30,5 +30,5 @@ for rootfiles in ${myarr[@]};
 	    INFILE=${DIRFILES}/merged/final/${rootfiles}
 		OUTFILES=${DIRFILES}/cut_selection/100GeV/${rootfiles%.root}_low.root
 		echo -e "Output file: ${OUTFILES} \n"
-		/home/saturn/capn/mppi133h/master_thesis/antares_dst/apply_cuts/bin/CutTrueSample ${INFILE} ${OUTFILES} 
+		./bin/CutTrueSample ${INFILE} ${OUTFILES} 
 done

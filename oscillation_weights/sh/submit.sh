@@ -15,7 +15,7 @@ echo "Starting script:" $(basename $BASH_SOURCE)
 
 ### PROJECT DIR for logs and the worker script
 if [ -z "$THIS_INPUT_PROJ_DIR" ]; then
-    THIS_PROJ_DIR=/home/saturn/capn/$USER/master_thesis/antares_dst/oscillation_weights
+    THIS_PROJ_DIR=$WORK/master_thesis/antares_dst/oscillation_weights
 else
     THIS_PROJ_DIR=$THIS_INPUT_PROJ_DIR
 fi

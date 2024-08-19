@@ -1,5 +1,5 @@
 #!/bin/sh
-FILEDIR=/home/saturn/capn/mppi133h/master_thesis/antares_dst/apply_cuts/lists/ending_run
+FILEDIR=$WORK/master_thesis/antares_dst/apply_cuts/lists/ending_run
 
 echo "-------------------------"
 echo "Starting script: $(basename $BASH_SOURCE)"

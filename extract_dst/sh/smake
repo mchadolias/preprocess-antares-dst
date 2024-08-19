@@ -5,7 +5,7 @@ singularity exec \
 	    -e \
 	    --env TEST_INPUT_ENV=$1 \
 	    --env TEST_OUTPUT_ENV=$2 \
-	    --bind /home/saturn/capn/$USER:/home \
+	    --bind $WORK:/home \
 	    --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst/:/mnt \
 	    --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
 	    $CONTAINER \

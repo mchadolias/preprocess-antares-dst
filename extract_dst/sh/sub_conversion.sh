@@ -43,7 +43,7 @@ echo "... executing script: " ${CONTAINER_SCRIPT}
 echo "singularity exec \
     --env INLIST=${INPUT_LIST} \
     --env FOLDER=${FOLDER} \
-    --bind /home/saturn/capn/${USER}:/home \
+    --bind $WORK:/home \
     --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst:/mc \
     --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
     --bind /home/wecapstor3/capn/mppi133h/ANTARES/:/sps \
@@ -54,7 +54,7 @@ echo "singularity exec \
 singularity exec \
     --env INLIST=${INPUT_LIST} \
     --env FOLDER=${FOLDER} \
-    --bind /home/saturn/capn/${USER}:/home \
+    --bind $WORK:/home \
     --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst:/mc \
     --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
     --bind /home/wecapstor3/capn/${USER}/ANTARES/mc:/sps \

@@ -9,7 +9,7 @@
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
-cd /home/saturn/capn/mppi133h/master_thesis/antares_dst/oscillation_weights/
+cd $WORK/master_thesis/antares_dst/oscillation_weights/
 source $HOME/bash_init/root_env.sh
 source $HOME/bash_init/oscprob_setenv.sh
 
@@ -36,6 +36,6 @@ for rootfiles in ${myarr[@]};
 	    INFILE=${DIRFILES}/cut_selection/${FOLDER}/${rootfiles}
 		OUTFILES=${DIRFILES}/cut_selection/${FOLDER}/${rootfiles%.root}_w.root
 		echo -e "Output file: ${OUTFILES} \n"
-		/home/saturn/capn/mppi133h/master_thesis/antares_dst/oscillation_weights/bin/OscillationWeights ${INFILE} ${OUTFILES} ${CLUSTER}
+		./oscillation_weights/bin/OscillationWeights ${INFILE} ${OUTFILES} ${CLUSTER}
 done
 

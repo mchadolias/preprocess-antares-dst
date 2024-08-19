@@ -12,7 +12,7 @@ singularity exec \
 	    --bind /home/wecapstor3/capn/mppi19/ANTARES/MC/v4.2/antdst/:/mnt \
 		--bind /home/wecapstor3/capn/${USER}/ANTARES/mc/:/sps \
 	    --bind /home/wecapstor3/capn/mppi19/ANTARES/data/antdst:/data \
-	    --bind /home/saturn/capn/$USER:/home \
+	    --bind $WORK:/home \
 	    ${CONTAINER}  \
 	    bash --noprofile --rcfile '/home/master_thesis/antares_dst/extract_dst/sh/init' -i
 	    

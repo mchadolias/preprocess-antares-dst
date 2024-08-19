@@ -32,5 +32,5 @@ for rootfiles in ${myarr[@]};
 	    INFILE=${DIRFILES}/merged/extracted/${rootfiles}
 		OUTFILES=${DIRFILES}/merged/corrected/${rootfiles%.root}_cor.root
 		echo -e "Output file: ${OUTFILES} \n"
-		/home/saturn/capn/mppi133h/master_thesis/antares_dst/corrections/bin/CorrectTree ${INFILE} ${TREE_NAME} ${OUTFILES} ${IS_WEIGHTED}
+		./bin/CorrectTree ${INFILE} ${TREE_NAME} ${OUTFILES} ${IS_WEIGHTED}
 done
