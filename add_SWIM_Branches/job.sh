@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+
+### SLURM
+
+#SBATCH --ntasks=1                    # Run a single task (by default tasks == CPU)
+#SBATCH --mem=3G                      # GB
+#SBATCH --time=00-10:00:00               #
+#SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
+#SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
+
+cd $WORK/master_thesis/antares_dst/add_SWIM_Branches
+DIRFILES=/home/wecapstor3/capn/mppi133h/ANTARES/mc
+
+
+echo "-----------------------------"
+echo "Starting script:" $(basename $BASH_SOURCE)
+echo "----------------------------- 0"
+echo ${INPUT_LIST}
+
+### fill array with filenames
+readarray -t myarr < ${INPUT_LIST%.txt}.txt
+
+echo "----------------------------- 1"
+echo ${myarr[@]}
+
+### loop over array, run executable on file
+for rootfiles in ${myarr[@]};
+	 do
+	 	echo -e "\nStarting analyze script with input file: ${rootfiles}"
+	    INFILE=${DIRFILES}/merged/final/Mupage/${rootfiles}
+		OUTFILES=${DIRFILES}/cut_selection/full_events/${rootfiles%.root}_cor.root
+		echo -e "Output file: ${OUTFILES} \n"
+		./bin/main ${INFILE} ${OUTFILES}
+done
