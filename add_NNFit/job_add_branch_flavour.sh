@@ -11,12 +11,12 @@
 ### SLURM
 
 #SBATCH --ntasks=1                    # Run a single task (by default tasks == CPU)
-#SBATCH --mem=120G                      # GB
+#SBATCH --mem=140G                      # GB
 #SBATCH --time=01-00:00:00               #
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
-echo "Running add_column_test.py"
+echo "Running add_column_branch.py"
 echo "ROOT_FILE: ${ROOT_FILE}"
 echo "H5_FILE: ${H5_FILE}"
 echo "TASK: ${TASK}"
@@ -25,8 +25,10 @@ echo "TASK: ${TASK}"
 ENVNAME="master_thesis"
 
 # Define the path to the Anaconda installation's 'bin' directory2
-ANACONDAPATH="/home/saturn/capn/mppi133h/software/private/conda/envs/master_thesis/bin"
-WORKDIR="/home/saturn/capn/mppi133h/master_thesis/antares_dst/add_NNFit"
+ANACONDAPATH="$WORK/software/private/conda/envs/master_thesis/bin"
+WORKDIR="$WORK/master_thesis/antares_dst/add_NNFit"
+ROOT_FILE=("antares_nue.root" "antares_numu_a_CC.root" "antares_numu_a_NC.root" "antares_nutau.root")
+
 
 # Add the Anaconda installation's 'bin' directory to the PATH variable
 export PATH="$ANACONDAPATH:$PATH"
