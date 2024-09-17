@@ -1,7 +1,10 @@
+import sys
 import time
 from datetime import timedelta
 import argparse
-from file_management import read_txt_file, load_dataframes, save_to_hdf5
+
+sys.path.append("../..")
+from libraries import read_txt_file, load_dataframes, save_to_hdf5
 
 def argument_parser():    
     parser = argparse.ArgumentParser(description="Application to do merge hdf5 files to more managable.")

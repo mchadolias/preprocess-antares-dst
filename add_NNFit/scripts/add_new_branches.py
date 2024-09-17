@@ -2,8 +2,8 @@ import os
 import sys
 import pandas as pd
 from argparse import ArgumentParser
-sys.path.append("../scripts/")
-import file_management as fm
+sys.path.append("../../")
+from libraries import file_management as fm
 
 def argument_parser():
     parser = ArgumentParser(description="Application to add variables to a rootfile")
