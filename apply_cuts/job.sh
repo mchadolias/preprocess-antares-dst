@@ -4,13 +4,13 @@
 ### SLURM
 
 #SBATCH --ntasks=1                    # Run a single task (by default tasks == CPU)
-#SBATCH --mem=1G                      # GB
+#SBATCH --mem=3G                      # GB
 #SBATCH --time=01-00:00:00               #
 #SBATCH --mail-user=mchadolias@km3net.de   # Where to send mail
 #SBATCH --mail-type=FAIL,TIME_LIMIT              # Mail events (NONE, BEGIN, END, FAIL, ALL)
 
-cd /home/saturn/capn/mppi133h/master_thesis/antares_dst/apply_cuts
-DIRFILES=/home/wecapstor3/capn/mppi133h/ANTARES/mc
+cd $WORK/master_thesis/antares_dst/apply_cuts
+DIRFILES=$WORK/ANTARES/mc
 
 echo "-----------------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
@@ -27,8 +27,8 @@ echo ${myarr[@]}
 for rootfiles in ${myarr[@]};
 	 do
 	 	echo -e "\nStarting analyze script with input file: ${rootfiles}"
-	    INFILE=${DIRFILES}/merged/final/${rootfiles}
-		OUTFILES=${DIRFILES}/cut_selection/100GeV/${rootfiles%.root}_low.root
+	    INFILE=${DIRFILES}/cut_selection/full_events/${rootfiles}
+		OUTFILES=${DIRFILES}/cut_selection/${CUT}/${rootfiles%.root}_cut.root
 		echo -e "Output file: ${OUTFILES} \n"
-		./bin/CutTrueSample ${INFILE} ${OUTFILES} 
+		./bin/CutSelection ${INFILE} ${OUTFILES} ${CUT}
 done
