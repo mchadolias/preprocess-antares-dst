@@ -6,6 +6,7 @@
 ## set this to 1 for a DRY RUN, i.e. without submission to SLURM
 
 FILEDIR=$WORK/master_thesis/antares_dst/add_SWIM_Branches/lists/
+CUT=$1
 
 echo "-------------------------"
 echo "Starting script: $(basename $BASH_SOURCE)"
@@ -16,6 +17,6 @@ for file in ${arr[@]};
 do  
     echo "---------------------"
     echo $file
-    echo submit.sh 0 $(basename $file)
-    ./submit.sh 0 $(basename $file) 
+    echo submit.sh 0 $(basename $file) $CUT
+    ./submit.sh 0 $(basename $file) $CUT
 done

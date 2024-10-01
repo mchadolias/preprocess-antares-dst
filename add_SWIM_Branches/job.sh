@@ -12,7 +12,6 @@
 cd $WORK/master_thesis/antares_dst/add_SWIM_Branches
 DIRFILES=/home/wecapstor3/capn/mppi133h/ANTARES/mc
 
-
 echo "-----------------------------"
 echo "Starting script:" $(basename $BASH_SOURCE)
 echo "----------------------------- 0"
@@ -28,8 +27,8 @@ echo ${myarr[@]}
 for rootfiles in ${myarr[@]};
 	 do
 	 	echo -e "\nStarting analyze script with input file: ${rootfiles}"
-	    INFILE=${DIRFILES}/merged/final/Mupage/${rootfiles}
-		OUTFILES=${DIRFILES}/cut_selection/full_events/${rootfiles%.root}_cor.root
+	    INFILE=${DIRFILES}/cut_selection/full_events/${rootfiles}
+		OUTFILES=${DIRFILES}/cut_selection/${CUT}/${rootfiles%.root}.root
 		echo -e "Output file: ${OUTFILES} \n"
 		./bin/main ${INFILE} ${OUTFILES}
 done
