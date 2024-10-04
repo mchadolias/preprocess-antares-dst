@@ -50,7 +50,7 @@ string GetTopology(double type, double interaction_type)
     else
     {
         cerr << "Error: topology not found" << endl;
-        exit(1);
+        printf("type: %f, interaction_type: %f\n", type, interaction_type);
     }
     return topology;
 }    
