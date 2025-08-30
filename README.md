@@ -1,29 +1,59 @@
-This folder contains the first part of the work carried out during my Master' thesis. This is the pre-processing pipeline converting AntDST files from the ANTARES Collaboration into ROOT files ready to be imported in Swim. Every folder contains a step of this pipeline. The converted files are not stored in this folder, but outside a specified location.
+# Preprocess ANTARES DST for SWIM Analysis
 
-Explanation of the work carried out in the folders is presented here for each one alphabeticaly.
+## 📖 Overview
 
-## add_NNFit
-This is the 4th step of the pipeline. This folder merges the NNFit output H5 files for better management and includes new branches to the processed dataset introducing NNFit information to the sample. 
+This repository contains the preprocessing pipeline developed during my Master’s thesis. Its goal is to convert ANTARES Collaboration DST files into ROOT format suitable for further statistical analysis using the **SWIM** framework.
 
-## add_SWIM_Branches
-This is the 6th step of the pipeline. In this folder, some minor modifications are applied to the dataset necessary to be converted to the format needs of Swim to some branches. 
+---
 
-## apply_cuts
-This is the 5th step of the pipeline. In this folder, some cut selection criteria are applied to the events specific to my analysis.
+## 📂 Repository Structure
 
-## corrections
-This is the 2nd step of the processing pipeline, during which some corrections are applied to the dataset due to the implementation of the previous step.
+The repository is structured as follows:
 
-## extract_dst
-This is the 1st part of the pipeline, where the AntDSTs are converted into new copies into a ROOT format based on standard TTree structure.
+```markdown
+├── README.md <- This overview and project structure documentation.
+│
+├── LICENSE <- Open-source license governing the project.
+│
+├── extract_dst <- Step 1: Convert ANTARES DST files into ROOT format (TTree structure).
+│
+├── corrections <- Step 2: Apply corrections to the dataset based on initial processing outputs.
+│
+├── oscillation_weights <- Step 3: Compute oscillation-weighted atmospheric probabilities for neutrino events.
+│
+├── add_NNFit <- Step 4: Merge NNFit H5 outputs and integrate NNFit data into the samples.
+│
+├── apply_cuts <- Step 5: Apply specific selection cuts for the analysis.
+│
+├── add_SWIM_Branches <- Step 6: Modify the dataset for compliance with SWIM input requirements (add needed branches).
+│
+├── merge <- (Optional) Implement merging strategies across pipeline steps.
+│
+├── libraries <- Shared Python utility modules used throughout the pipeline.
+│
+└── standard_template.mk <- Makefile template to compile any C++ code used within the pipeline.
+```
 
-## merge
-In this step, a merging startegy is included that can be applied in multiple steps.
+## ⚙️ Requirements
 
-## oscillation_weights
-This is the 3rd step of the processing pipeline. In this step the oscillated atmospheric weights are calculated for neutrino events.
+The pipeline is built using **Python 3.8+** alongside shell and C++ tooling. Here is a list of the required packages:
 
-## libraries
-This folder contains general Python-based functions used throught the pipeline.
+- `ROOT`
+- `h5py`
+- `numpy`
+- `pandas`
+- `scipy`
+- `tqdm`
 
-standard_template.mk: A template Makefile used to compile C++ sourcecode in multiple steps of the pipeline. 
+---
+
+## 📜 License
+
+This project is released under the [MIT License](LICENSE).
+
+---
+
+## 📝 Acknowledgements
+
+Special thanks to the ANTARES Collaboration for providing the necessary data and support. The pipeline has been developed using the **SWIM** framework, an open-source framework for the analysis of neutrino oscillations.
+
