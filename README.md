@@ -29,7 +29,7 @@ The repository is structured as follows:
 │
 ├── merge <- (Optional) Implement merging strategies across pipeline steps.
 │
-├── libraries <- Shared Python utility modules used throughout the pipeline.
+├── external_library <- Shared Python utility modules used throughout the pipeline.
 │
 └── standard_template.mk <- Makefile template to compile any C++ code used within the pipeline.
 ```
